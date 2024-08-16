@@ -1,0 +1,116 @@
+=====creacion usuarios====
+{
+     "nombre": "Jose Lema",
+     "direccion": "Otavalo sn y principal ",
+     "telefono": "098254785",
+     "contrasena":"1234",
+     "estado":true
+}
+
+{
+     "nombre": "Marianela Montalvo",
+     "direccion": "Amazonas y  NNUU",
+     "telefono": "097548965",
+     "contrasena":"5678 ",
+     "estado":true
+}
+
+{
+     "nombre": "Juan Osorio",
+     "direccion": "13 junio y Equinoccial",
+     "telefono": "098874587",
+     "contrasena":"1245",
+     "estado":true
+}
+
+
+
+=====creacion cuentas====
+
+{
+    "numeroCuenta": 478758,
+    "tipoCuenta": "Ahorro",
+    "saldoInicial": 2000,
+    "clienteid": 1,
+    "estado": true
+}
+
+
+{
+    "numeroCuenta": 225487,
+    "tipoCuenta": "Corriente",
+    "saldoInicial": 100,
+    "clienteid": 2,
+    "estado": true
+}
+
+{
+    "numeroCuenta": 495878 ,
+    "tipoCuenta": "Ahorro",
+    "saldoInicial": 0,
+    "clienteid": 3,
+    "estado": true
+}
+
+{
+    "numeroCuenta": 496825  ,
+    "tipoCuenta": "Ahorro",
+    "saldoInicial": 540,
+    "clienteid": 2,
+    "estado": true
+}
+
+{
+    "numeroCuenta": 585545   ,
+    "tipoCuenta": "Corriente",
+    "saldoInicial": 1000,
+    "clienteid": 1,
+    "estado": true
+}
+
+=====movimientos====
+{
+	"numeroCuenta":478758 ,
+	"fecha":"10/2/2022",
+	"tipoMovimiento": "Retiro",
+	"valor": -575
+}
+
+
+{
+	"numeroCuenta":225487  ,
+	"fecha":"11/2/2022",
+	"tipoMovimiento": "Deposito",
+	"valor": 600
+}
+
+{
+	"numeroCuenta":495878   ,
+	"fecha":"12/2/2022",
+	"tipoMovimiento": "Deposito",
+	"valor": 150
+}
+
+{
+	"numeroCuenta":496825    ,
+	"fecha":"8/2/2022",
+	"tipoMovimiento": "Retiro",
+	"valor": -540
+}
+
+=====INSERT=======
+INSERT INTO `` (`clienteid`,`nombre`,`genero`,`identificacion`,`edad`,`direccion`,`telefono`,`contrasena`,`estado`) VALUES (1,'Jose Lema',NULL,NULL,0,'Otavalo sn y principal ','098254785','1234',1);
+INSERT INTO `` (`clienteid`,`nombre`,`genero`,`identificacion`,`edad`,`direccion`,`telefono`,`contrasena`,`estado`) VALUES (2,'Marianela Montalvo',NULL,NULL,0,'Amazonas y  NNUU','097548965','5678 ',1);
+INSERT INTO `` (`clienteid`,`nombre`,`genero`,`identificacion`,`edad`,`direccion`,`telefono`,`contrasena`,`estado`) VALUES (3,'Juan Osorio',NULL,NULL,0,'13 junio y Equinoccial','098874587','1245',1);
+
+INSERT INTO `` (`numero_cuenta`,`clienteid`,`estado`,`saldo_inicial`,`tipo_cuenta`) VALUES (225487,2,'1',700,'Corriente');
+INSERT INTO `` (`numero_cuenta`,`clienteid`,`estado`,`saldo_inicial`,`tipo_cuenta`) VALUES (478758,1,'1',1425,'Ahorro');
+INSERT INTO `` (`numero_cuenta`,`clienteid`,`estado`,`saldo_inicial`,`tipo_cuenta`) VALUES (495878,3,'1',150,'Ahorro');
+INSERT INTO `` (`numero_cuenta`,`clienteid`,`estado`,`saldo_inicial`,`tipo_cuenta`) VALUES (496825,2,'1',0,'Ahorro');
+INSERT INTO `` (`numero_cuenta`,`clienteid`,`estado`,`saldo_inicial`,`tipo_cuenta`) VALUES (585545,1,'1',1000,'Corriente');
+
+
+INSERT INTO `` (`numero_cuenta`,`tipo_movimiento`,`fecha`,`valor`,`saldo`) VALUES (496825,'Retiro','2022-02-08 00:00:00.000000',-540,0);
+INSERT INTO `` (`numero_cuenta`,`tipo_movimiento`,`fecha`,`valor`,`saldo`) VALUES (478758,'Retiro','2022-02-10 00:00:00.000000',-575,1425);
+INSERT INTO `` (`numero_cuenta`,`tipo_movimiento`,`fecha`,`valor`,`saldo`) VALUES (225487,'Deposito','2022-02-11 00:00:00.000000',600,700);
+INSERT INTO `` (`numero_cuenta`,`tipo_movimiento`,`fecha`,`valor`,`saldo`) VALUES (495878,'Deposito','2022-02-12 00:00:00.000000',150,150);
