@@ -26,4 +26,5 @@ public class Account {
     private boolean state;
     @NotNull
     private Long clientId;
+
 }

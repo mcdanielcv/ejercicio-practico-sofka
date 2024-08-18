@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.microservicio.cliente.persona.cliente_persona.models.ClientDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ import com.microservicio.cliente.persona.cliente_persona.services.ClientService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/clients")
+@RequestMapping(value = "/clients/")
 @Validated
 public class ClientController {
 
@@ -34,7 +35,7 @@ public class ClientController {
 
     @GetMapping
     public ResponseEntity<?> getAllClients() {
-        List<Client> list = clientService.getAllClients();
+        List<ClientDTO> list = clientService.getAllClients();
         if (list.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseVo(false, "No existen datos"));
         } else {
@@ -55,7 +56,7 @@ public class ClientController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<?> updateClientById(@Valid @RequestBody Client client, BindingResult result,
                                                @PathVariable Long id) {
         try {
@@ -70,7 +71,7 @@ public class ClientController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<?> deleteClientById(@PathVariable Long id) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -80,7 +81,7 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/client/{clientId}")
+    @GetMapping("client/{clientId}")
     public ResponseEntity<?> getNameClientById(@PathVariable Long clientId) {
         try {
             return ResponseEntity.status(HttpStatus.OK)
@@ -90,7 +91,7 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/client/")
+    @GetMapping("client/")
     public List<Long> getAllIdClients() {
         return  clientService.getAllIdClients();
     }

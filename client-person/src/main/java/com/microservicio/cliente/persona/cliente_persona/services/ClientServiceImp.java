@@ -2,17 +2,17 @@ package com.microservicio.cliente.persona.cliente_persona.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import com.microservicio.cliente.persona.cliente_persona.models.ClientDTO;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.microservicio.cliente.persona.cliente_persona.configuration.RabbitConfig;
 import com.microservicio.cliente.persona.cliente_persona.entities.Client;
 import com.microservicio.cliente.persona.cliente_persona.repositories.ClientRepository;
-import com.microservicio.cliente.persona.cliente_persona.services.EncryptService;
 
 @Service
 public class ClientServiceImp implements ClientService {
@@ -24,8 +24,10 @@ public class ClientServiceImp implements ClientService {
     private EncryptService encryptService;
 
     @Transactional(readOnly = true)
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
+    public List<ClientDTO> getAllClients() {
+        List<Client> clients= clientRepository.findAll();
+        List<ClientDTO> clientDTOS = clients.stream().map(client-> ClientMapper.INSTANCE.ClientToDto(client)).collect(Collectors.toList());
+        return clientDTOS;
     }
 
     @Transactional(readOnly = true)
@@ -34,34 +36,34 @@ public class ClientServiceImp implements ClientService {
     }
 
     @Transactional
-    public Client saveClient(Client cliente) {
+    public ClientDTO saveClient(Client cliente) {
         cliente.setPassword(encryptService.encryptPassword(cliente.getPassword()));
-        return clientRepository.save(cliente);
+        return ClientMapper.INSTANCE.ClientToDto(clientRepository.save(cliente));
     }
 
     @Transactional
-    public Client updateClient(Client client, Long id) {
+    public ClientDTO updateClient(Client client, Long id) {
         Optional<Client> clienteOptional = clientRepository.findById(id);
         if (clienteOptional.isPresent()) {
             Client clientDb = clienteOptional.get();
             clientDb.setName(client.getName());
             clientDb.setAddress(client.getAddress());
             clientDb.setPhone(client.getPhone());
-            clientDb.setPassword(client.getPassword());
-            return clientRepository.save(clientDb);
+            clientDb.setPassword(encryptService.encryptPassword(client.getPassword()));
+            return ClientMapper.INSTANCE.ClientToDto(clientRepository.save(clientDb));
         } else {
-            throw new RuntimeException("El client no existe para actualizar");
+            throw new EntityNotFoundException("El client no existe para actualizar");
         }
     }
 
     @Transactional
-    public Client deleteClientById(Long id) {
+    public ClientDTO deleteClientById(Long id) {
         Optional<Client> clienteOptional = clientRepository.findById(id);
         if (clienteOptional.isPresent()) {
             clientRepository.deleteById(id);
-            return clienteOptional.get();
+            return ClientMapper.INSTANCE.ClientToDto(clienteOptional.get());
         }else{
-            throw new RuntimeException("El cliente no existe para eliminar");
+            throw new EntityNotFoundException("El cliente no existe para eliminar");
         }
     }
 
@@ -71,18 +73,18 @@ public class ClientServiceImp implements ClientService {
         if(clienteOptional.isPresent()){
             return clienteOptional.get().getName();
         }else{
-            throw new RuntimeException("No existe cliente con el id: "+clienteId);
+            throw new EntityNotFoundException("No existe cliente con el id: "+clienteId);
         }
     }
 
     @Transactional(readOnly = true)
     public List<Long> getAllIdClients(){
-        return clientRepository.findAllIdClients();
+        List<Integer> idInteger = clientRepository.findAllIdClients();
+         List<Long> idsAsLong = idInteger.stream()
+                        .map(Number::longValue)  // Convierte a Long
+                        .collect(Collectors.toList());
+        return idsAsLong;
     }
 
-    @RabbitListener(queues = RabbitConfig.MOVEMENT_CLIENT_QUEUE)
-    public void recibirMensaje(String mensaje) {
-        System.out.println("Mensaje recibido desde cuenta-movimiento: " + mensaje);
-        // Lógica para procesar el mensaje
-    }
+
 }

@@ -1,22 +1,22 @@
 {
 	"info": {
-		"_postman_id": "7e5cacce-5ce7-4a9c-9071-b82143756887",
-		"name": "ejercicio_practico",
+		"_postman_id": "95989b64-810b-437d-b9e6-a9437b750e2c",
+		"name": "ejercicio_practico-sofka",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "8427547"
 	},
 	"item": [
 		{
-			"name": "clientes",
+			"name": "clients",
 			"item": [
 				{
-					"name": "registrarCliente",
+					"name": "saveClient",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n     \"nombre\": \"Jose Lema\",\r\n     \"direccion\": \"Otavalo sn y principal \",\r\n     \"telefono\": \"098254785\",\r\n     \"contrasena\":\"1234\",\r\n     \"estado\":true\r\n}",
+							"raw": "{\r\n     \"name\": \"Jose Lema\",\r\n     \"address\": \"Otavalo sn y principal\",\r\n     \"phone\": \"098254785\",\r\n     \"password\":\"1234\",\r\n     \"state\":true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,40 +24,42 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/clientes",
+							"raw": "http://localhost:8080/clients/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"clientes"
+								"clients",
+								""
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "buscarTodos",
+					"name": "getAllClients",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/clientes",
+							"raw": "http://localhost:8080/clients/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"clientes"
+								"clients",
+								""
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "borrarClientePorId",
+					"name": "deleteClientById",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -69,34 +71,40 @@
 							},
 							{
 								"key": "id",
-								"value": "3",
+								"value": "2",
 								"type": "text",
 								"disabled": true
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/clientes/6",
+							"raw": "http://localhost:8080/clients/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"clientes",
-								"6"
+								"clients",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "actualizarClientePorId",
+					"name": "updateClientById",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n            \"nombre\": \"Jose Lema\",\r\n            \"genero\": \"M\",\r\n            \"edad\": 12,\r\n            \"identificacion\": \"1721521613\",\r\n            \"direccion\": \"Otavalo sn  \",\r\n            \"telefono\": \"098254785\",\r\n            \"contrasena\": \"xxx\",\r\n            \"estado\": true\r\n        }",
+							"raw": "{\r\n     \"name\": \"Jose Lema\",\r\n     \"address\": \"Otavalo sn y principal\",\r\n     \"phone\": \"098254785\",\r\n     \"password\":\"xxxx\",\r\n     \"state\":true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -104,20 +112,20 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/clientes/:id",
+							"raw": "http://localhost:8080/clients/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"clientes",
+								"clients",
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "7"
+									"value": "2"
 								}
 							]
 						}
@@ -127,16 +135,16 @@
 			]
 		},
 		{
-			"name": "cuentas",
+			"name": "accounts",
 			"item": [
 				{
-					"name": "crearCuentas",
+					"name": "saveAccount",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"numeroCuenta\": 585545   ,\r\n    \"tipoCuenta\": \"Corriente\",\r\n    \"saldoInicial\": 1000,\r\n    \"clienteid\": 1,\r\n    \"estado\": true\r\n}",
+							"raw": "{\r\n    \"accountNumber\": 225487   ,\r\n    \"accountType\": \"Corriente\",\r\n    \"initialBalance\": 700,\r\n    \"clientId\": 1,\r\n    \"estado\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -144,58 +152,58 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/cuentas",
+							"raw": "http://localhost:8081/accounts",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"cuentas"
+								"accounts"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "buscarTodasCuentas",
+					"name": "getAllAccounts",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/cuentas",
+							"raw": "http://localhost:8081/accounts",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"cuentas"
+								"accounts"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "borrarCuentaPorId",
+					"name": "deleteAccountById",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/cuentas/:id",
+							"raw": "http://localhost:8081/accounts/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"cuentas",
+								"accounts",
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "585545"
+									"value": "225487"
 								}
 							]
 						}
@@ -203,13 +211,13 @@
 					"response": []
 				},
 				{
-					"name": "actualizarCuentaPorId",
+					"name": "updateAccountById",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"numeroCuenta\": 496825  ,\r\n    \"tipoCuenta\": \"Ahorro\",\r\n    \"saldoInicial\": 700,\r\n    \"clienteid\": 2,\r\n    \"estado\": true\r\n}",
+							"raw": "{\r\n    \"accountType\": \"Corriente\",\r\n    \"initialBalance\": 1000,\r\n    \"clientId\": 1,\r\n    \"estado\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -217,20 +225,20 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/cuentas/:id",
+							"raw": "http://localhost:8081/accounts/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"cuentas",
+								"accounts",
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "496825"
+									"value": "225487"
 								}
 							]
 						}
@@ -240,16 +248,16 @@
 			]
 		},
 		{
-			"name": "movimientos",
+			"name": "transactions",
 			"item": [
 				{
-					"name": "registrarMovimiento",
+					"name": "saveTransaction",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"numeroCuenta\":585545    ,\r\n\t\"fecha\":\"8/2/2022\",\r\n\t\"tipoMovimiento\": \"Retiro\",\r\n\t\"valor\": -10\r\n}",
+							"raw": "{\r\n\t\"accountNumber\":225487,\r\n\t\"transactionDate\":\"2022-08-02\",\r\n\t\"typeMovement\": \"Retiro\",\r\n\t\"value\":-10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -257,41 +265,68 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/movimientos",
+							"raw": "http://localhost:8081/transactions",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"movimientos"
+								"transactions"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "eliminarMovimiento",
+					"name": "deleteTransactionByNumTransaccion",
 					"request": {
 						"method": "DELETE",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "buscarTodosMovimientos",
-					"request": {
-						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {\r\n                \"numeroCuenta\": 225487,\r\n                \"fecha\": \"2022-02-08\",\r\n                \"tipoMovimiento\": \"Retiro\",\r\n                \"valor\": -10.0\r\n            }\r\n}            ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8081/movimientos",
+							"raw": "http://localhost:8081/transactions/:id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8081",
 							"path": [
-								"movimientos"
+								"transactions",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllTransactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"transactions"
 							]
 						}
 					},
@@ -300,33 +335,46 @@
 			]
 		},
 		{
-			"name": "reporte",
+			"name": "report",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/reportes?clienteId=3&fechaInicio=01/02/2022&fechaFin=31/02/2022",
+					"raw": "http://localhost:8081/reports?fecha=2022-01-01,2024-01-31",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8081",
 					"path": [
-						"reportes"
+						"reports"
 					],
 					"query": [
 						{
-							"key": "clienteId",
-							"value": "3"
-						},
-						{
-							"key": "fechaInicio",
-							"value": "01/02/2022"
-						},
-						{
-							"key": "fechaFin",
-							"value": "31/02/2022"
+							"key": "fecha",
+							"value": "2022-01-01,2024-01-31"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "idClients",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/clients/client/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"clients",
+						"client",
+						""
 					]
 				}
 			},

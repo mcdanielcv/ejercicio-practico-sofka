@@ -2,7 +2,7 @@ package com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.
 
 import java.util.List;
 
-import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.entities.Account;
+import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models.AccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class AccountController {
 
     @GetMapping
     public ResponseEntity<?> getAllAccounts() {
-        List<Account> list = accountService.getAllAccounts();
+        List<AccountDTO> list = accountService.getAllAccounts();
         if (list.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseVo(false, "No existen datos"));
         } else {
@@ -42,26 +42,26 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveAccount(@Valid @RequestBody Account account, BindingResult result) {
+    public ResponseEntity<?> saveAccount(@Valid @RequestBody AccountDTO accountDto, BindingResult result) {
         try {
             if (result.hasErrors())
                 return utilitariosService.validacionDatos(result);
             return ResponseEntity.status(HttpStatus.CREATED).body(
-                    new ResponseVo(true, "Cuenta creada", accountService.saveAccount(account)));
+                    new ResponseVo(true, "Cuenta creada", accountService.saveAccount(accountDto)));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseVo(false, e.getMessage()));
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateAccountById(@Valid @RequestBody Account account, BindingResult result,
-            @PathVariable Long id) {
+    public ResponseEntity<?> updateAccountById(@Valid @RequestBody AccountDTO accountDto, BindingResult result,
+                                               @PathVariable Long id) {
         try {
             if (result.hasErrors()) {
                 return utilitariosService.validacionDatos(result);
             }
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseVo(true, "Cuenta Actualizado", accountService.updateAccount(account, id)));
+                    new ResponseVo(true, "Cuenta Actualizado", accountService.updateAccount(accountDto, id)));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseVo(false, e.getMessage()));
         }

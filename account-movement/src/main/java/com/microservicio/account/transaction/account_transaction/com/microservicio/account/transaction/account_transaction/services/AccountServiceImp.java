@@ -2,12 +2,16 @@ package com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.entities.Account;
+import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models.AccountDTO;
+import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models.AccountDtoRed;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -31,8 +35,10 @@ public class AccountServiceImp implements AccountService {
     private ClientApiService clientApiService;
 
     @Transactional(readOnly = true)
-    public List<Account> getAllAccounts() {
-        return accountRepository.findAll();
+    public List<AccountDTO> getAllAccounts() {
+        List<Account> accounts = accountRepository.findAll();
+        List<AccountDTO> accountDTOS = accounts.stream().map(account -> AccountMapper.INSTANCE.AccountToDto(account)).collect(Collectors.toList());
+        return accountDTOS;
     }
 
     @Transactional(readOnly = true)
@@ -41,44 +47,47 @@ public class AccountServiceImp implements AccountService {
     }
 
     @Transactional
-    public Account saveAccount(Account account) {
-        if (accountRepository.existsAccountByAccountNumber(account.getAccountNumber())) {
-            throw new RuntimeException("La Cuenta ya existe");
+    public AccountDTO saveAccount(AccountDTO accountDto) {
+        if (accountRepository.existsAccountByAccountNumber(accountDto.getAccountNumber())) {
+            throw new EntityNotFoundException("La Cuenta ya existe");
         }
-        account.setAvailableBalance(account.getInitialBalance());
-        return accountRepository.save(account);
+        accountDto.setAvailableBalance(accountDto.getInitialBalance());
+        Account account = AccountMapper.INSTANCE.dtoToAccount(accountDto);
+        return AccountMapper.INSTANCE.AccountToDto(accountRepository.save(account));
     }
 
     @Transactional
-    public Account updateAccount(Account account, Long id) {
+    public AccountDTO updateAccount(AccountDTO accountDto, Long id) {
         Optional<Account> cuentaOptional = accountRepository.findById(id);
         if (cuentaOptional.isPresent()) {
             Account accountDb = cuentaOptional.get();
-            accountDb.setAccountType(account.getAccountType());
-            accountDb.setInitialBalance(account.getInitialBalance());
-            accountDb.setState(account.isState());
-            return accountRepository.save(accountDb);
+            accountDb.setAccountType(accountDto.getAccountType());
+            accountDb.setInitialBalance(accountDto.getInitialBalance());
+            accountDb.setState(accountDto.isState());
+            return AccountMapper.INSTANCE.AccountToDto(accountRepository.save(accountDb));
         } else {
-            throw new RuntimeException("La account no existe");
+            throw new EntityNotFoundException("La account no existe");
         }
     }
 
     @Transactional
-    public Account deleteAccountById(Long id) {
+    public AccountDtoRed deleteAccountById(Long id) {
         Optional<Account> cuentaOptional = accountRepository.findById(id);
         if (cuentaOptional.isPresent()) {
             accountRepository.deleteById(id);
-            return cuentaOptional.get();
+            return AccountMapper.INSTANCE.AccountToDtoRed(cuentaOptional.get());
         } else {
-            throw new RuntimeException("La cuenta no existe");
+            throw new EntityNotFoundException("La cuenta no existe");
         }
     }
 
     @Transactional(readOnly = true)
     public List<ReportDTO> generateReport(Long clientId, String startDate, String endDate) throws ParseException {
         SimpleDateFormat formato = new SimpleDateFormat("dd/M/yyyy");
+
         Date startDateVo = formato.parse(startDate);
         Date endDateVo = formato.parse(endDate);
+
         List<Account> accounts = accountRepository.findClientByid(clientId);
         return accounts.stream().map(account -> {
             List<Transaction> movements = transactionsRepository.findByCuentaIdAndFechaBetween(account.getAccountNumber(),
@@ -95,5 +104,33 @@ public class AccountServiceImp implements AccountService {
                 return reportDTO;
             }).collect(Collectors.toList());
         }).flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReportDTO> generateReport(Date startDate, Date endDate) throws ParseException {
+        SimpleDateFormat formato = new SimpleDateFormat("dd/M/yyyy");
+
+        List<Integer> idClients = clientApiService.getAllIdClients();
+        List<Long> idClientsLong = idClients.stream().map(Integer::longValue).collect(Collectors.toList());
+
+            return idClientsLong.stream().map(
+                idClient -> {
+                    List<Account> accounts = accountRepository.findClientByid(idClient);
+                    return accounts.stream().map(account -> {
+                        List<Transaction> movements = transactionsRepository.findByCuentaIdAndFechaBetween(account.getAccountNumber(),
+                                startDate, endDate);
+                        return movements.stream().map(movement -> {
+                            ReportDTO reportDTO = new ReportDTO();
+                            reportDTO.setNameClient(clientApiService.getNameClientById(idClient));
+                            reportDTO.setTransactionDate(formato.format(movement.getTransactionDate()));
+                            reportDTO.setAccountNumber(account.getAccountNumber().toString());
+                            reportDTO.setType(account.getAccountType());
+                            reportDTO.setInitialBalance(account.getInitialBalance());
+                            reportDTO.setTransactionValue(movement.getValue());
+                            reportDTO.setAvailableBalance(movement.getBalance());
+                            return reportDTO;
+                        }).collect(Collectors.toList());
+                    }).flatMap(List::stream).collect(Collectors.toList());
+                }).flatMap(List::stream).collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+
 import java.util.Date;
 
 @Getter
@@ -32,4 +33,6 @@ public class Transaction {
 
     @NotNull
     private double balance;
+
+
 }

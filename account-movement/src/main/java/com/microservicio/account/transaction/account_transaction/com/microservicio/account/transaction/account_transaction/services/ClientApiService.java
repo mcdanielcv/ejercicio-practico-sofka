@@ -21,7 +21,7 @@ public class ClientApiService {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Long> getAllIdClients() {
+    public List<Integer> getAllIdClients() {
         String url = CLIENT_PERSON_URL + "/clients/client/";
         return restTemplate.getForObject(url, List.class);
     }

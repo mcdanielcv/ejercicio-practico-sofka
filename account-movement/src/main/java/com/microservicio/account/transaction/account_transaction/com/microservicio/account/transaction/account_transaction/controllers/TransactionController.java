@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.entities.Transaction;
-import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models.TransactionVo;
+import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models.TransactionDTO;
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models.ResponseVo;
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.services.TransactionService;
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.services.UtilitariosService;
@@ -45,7 +44,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveTransaction(@Valid @RequestBody TransactionVo transactionVo, BindingResult result) {
+    public ResponseEntity<?> saveTransaction(@Valid @RequestBody TransactionDTO transactionVo, BindingResult result) {
         try {
             if (result.hasErrors())
                 return utilitariosService.validacionDatos(result);
@@ -66,11 +65,5 @@ public class TransactionController {
         } catch (RuntimeException | ParseException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseVo(false, e.getMessage()));
         }
-    }
-
-    @GetMapping("/sendMessageClient")
-    public String sendMessageClient(@RequestParam String message) {
-        transactionService.sendMessage(message);
-        return "Mensaje enviado a cliente-persona: " + message;
     }
 }
