@@ -12,6 +12,23 @@ public class ReportDTO {
     private Double transactionValue;
     private Double availableBalance;
 
+    public ReportDTO() {
+
+    }
+
+    public ReportDTO(String transactionDate, String nameClient, String accountNumber,
+                     String type, Double initialBalance, Boolean state, Double transactionValue,
+                     Double availableBalance) {
+        this.transactionDate = transactionDate;
+        this.nameClient = nameClient;
+        this.accountNumber = accountNumber;
+        this.type = type;
+        this.initialBalance = initialBalance;
+        this.state = state;
+        this.transactionValue = transactionValue;
+        this.availableBalance = availableBalance;
+    }
+
     public String getTransactionDate() {
         return transactionDate;
     }
