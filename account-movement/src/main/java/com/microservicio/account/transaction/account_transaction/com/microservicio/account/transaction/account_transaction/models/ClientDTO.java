@@ -1,4 +1,4 @@
-package com.microservicio.cliente.persona.cliente_persona.models;
+package com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models;
 
 import lombok.Getter;
 import lombok.Setter;
