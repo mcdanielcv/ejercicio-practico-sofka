@@ -23,6 +23,10 @@ public class ClientServiceImp implements ClientService {
     @Autowired(required = true)
     private EncryptService encryptService;
 
+    @Autowired
+    private ClientProducerService clientProducerService;
+
+
     @Transactional(readOnly = true)
     public List<ClientDTO> getAllClients() {
         List<Client> clients= clientRepository.findAll();
@@ -38,7 +42,9 @@ public class ClientServiceImp implements ClientService {
     @Transactional
     public ClientDTO saveClient(Client cliente) {
         cliente.setPassword(encryptService.encryptPassword(cliente.getPassword()));
-        return ClientMapper.INSTANCE.ClientToDto(clientRepository.save(cliente));
+        ClientDTO clientDTO = ClientMapper.INSTANCE.ClientToDto(clientRepository.save(cliente));
+        clientProducerService.sendClientMessage(clientDTO.getClientId());
+        return clientDTO;
     }
 
     @Transactional

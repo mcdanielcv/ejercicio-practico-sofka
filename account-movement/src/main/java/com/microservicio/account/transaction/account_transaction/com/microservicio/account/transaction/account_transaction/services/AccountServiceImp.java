@@ -8,10 +8,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.configuracion.RabbitMQConfig;
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.entities.Account;
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models.AccountDTO;
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models.AccountDtoRed;
+import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.models.ClientDTO;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.a
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.repositories.AccountRepository;
 import com.microservicio.cuenta.movimiento.cuenta_movimiento.com.microservicio.account.transaction.account_transaction.repositories.TransactionsRepository;
 
+@Slf4j
 @Service
 public class AccountServiceImp implements AccountService {
 
@@ -33,6 +38,9 @@ public class AccountServiceImp implements AccountService {
 
     @Autowired
     private ClientApiService clientApiService;
+
+    @Autowired
+    private AccountNumberGeneratorService accountNumberGeneratorService;
 
     @Transactional(readOnly = true)
     public List<AccountDTO> getAllAccounts() {
@@ -132,5 +140,20 @@ public class AccountServiceImp implements AccountService {
                         }).collect(Collectors.toList());
                     }).flatMap(List::stream).collect(Collectors.toList());
                 }).flatMap(List::stream).collect(Collectors.toList());
+    }
+
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_CLIENT)
+    public void receiveMessage(Long clientId) {
+        System.out.println("Received Message from Cliente Queue: " + clientId);
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setClientId(clientId);
+        accountDTO.setAccountType("Corrriente");
+        accountDTO.setState(true);
+        accountDTO.setInitialBalance(0);
+        accountDTO.setAvailableBalance(0);
+        accountDTO.setAccountNumber(Long.parseLong(accountNumberGeneratorService.generateAccountNumber()));
+        accountDTO = saveAccount(accountDTO);
+        log.info(String.format("Cuenta creada:: Cliente->%s , Cuenta->%s",clientId,accountDTO.getAccountNumber()));
     }
 }
